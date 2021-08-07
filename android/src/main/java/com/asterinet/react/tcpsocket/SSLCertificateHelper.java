@@ -3,6 +3,7 @@ package com.asterinet.react.tcpsocket;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -42,7 +43,7 @@ final class SSLCertificateHelper {
      * @return An SSLSocketFactory which trusts the provided CA when provided to network clients
      */
     static SSLSocketFactory createCustomTrustedSocketFactory(@NonNull final Context context, @NonNull final String rawResourceUri) throws IOException, GeneralSecurityException {
-        InputStream caInput = getRawResourceStream(context, rawResourceUri);
+        InputStream caInput = new ByteArrayInputStream(rawResourceUri.getBytes());
         // Generate the CA Certificate from the raw resource file
         Certificate ca = CertificateFactory.getInstance("X.509").generateCertificate(caInput);
         caInput.close();
