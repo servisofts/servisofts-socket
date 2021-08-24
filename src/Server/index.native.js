@@ -3,8 +3,8 @@
 import { NativeModules } from 'react-native';
 import EventEmitter from 'eventemitter3';
 const Sockets = NativeModules.TcpSockets;
-import Socket from './Socket';
-import { nativeEventEmitter, getNextId } from './Globals';
+import Socket from '../Socket';
+import { nativeEventEmitter, getNextId } from '../Globals';
 
 /**
  * @extends {EventEmitter<'connection' | 'listening' | 'error' | 'close', any>}
@@ -13,6 +13,9 @@ export default class Server extends EventEmitter {
     /**
      * @param {(socket: Socket) => void} [connectionCallback] Automatically set as a listener for the `'connection'` event.
      */
+    static getType(){
+        return "native"
+    }
     constructor(connectionCallback) {
         super();
         /** @private */
