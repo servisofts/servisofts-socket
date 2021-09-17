@@ -1,6 +1,6 @@
 import Socket from './Socket';
 import Server from './Server';
-
+import SSocket from './SSocket'
 // /**
 //  * @param {(socket: Socket) => void} connectionListener
 //  * @returns {Server}
@@ -19,7 +19,7 @@ function createConnection(options, callback) {
     return tcpSocket.connect(options, callback);
 }
 
-export { createServer, createConnection, Server, Socket };
+export default SSocket;
 
 // @ts-ignore
 // module.exports = { createServer, createConnection, Server, Socket };
