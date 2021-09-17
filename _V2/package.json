@@ -1,7 +1,7 @@
 {
     "name": "servisofts-socket",
     "title": "Servisofts socket",
-    "version": "1.2.1",
+    "version": "2.0.1",
     "description": "Socket ss",
     "main": "index.js",
     "types": "index.d.ts",
@@ -10,7 +10,9 @@
         "url": "https://github.com/servisofts/servisofts-socket.git"
     },
     "scripts": {
-        "start": "rm -rf dist && mkdir dist && rsync -rv --exclude-from=./.copyignore ./ dist/ && tsc -p ./run.tsconfig.json"
+        "up": "npm run build && cd dist && npm publish",
+        "start": "rm -rf dist && mkdir dist && rsync -rv --exclude-from=./.copyignore ./ dist/ && tsc -p ./run.tsconfig.json",
+        "build": "rm -rf dist  && mkdir dist  && rsync -rv --exclude-from=./.copyignore ./ dist/ && tsc -p ./tsconfig.json"
     },
     "files": [
         "/android/src/",

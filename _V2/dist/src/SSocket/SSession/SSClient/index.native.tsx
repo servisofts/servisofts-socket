@@ -28,7 +28,6 @@ export default class SSClient {
         var end_cert = "\n-----END CERTIFICATE-----";
         var cerdata = this.props.cert;
         var pem = cert_begin + cerdata + end_cert;
-
         var _instance = this;
         this.socket = TcpSocket.createConnection({
             port: this.props.port.native,
