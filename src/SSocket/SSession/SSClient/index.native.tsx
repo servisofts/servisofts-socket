@@ -48,7 +48,7 @@ export default class SSClient {
             _instance.SSession.onError(error)
         });
         this.socket.on('close', function () {
-            _instance.SSession.onClose()
+            _instance.close()
         });
         this.socket.onmessage = (evt) => {
             _instance.SSession.onMessage(evt.data)
@@ -59,6 +59,8 @@ export default class SSClient {
         this.socket.end();
         this.socket.destroy();
         this.socket = null;
+        this.SSession.onClose()
+
     }
     send(data) {
         if (!this.socket) {

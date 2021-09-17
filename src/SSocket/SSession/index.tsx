@@ -13,15 +13,15 @@ export default class SSession {
     identificarse;
     constructor(props: SSocketConfigProps) {
         this.props = props;
-        this.log("Instanciando el socket");
-        this.log("props", JSON.stringify(props, null, "\t"));
+        // this.log("Instanciando el socket");
+        // this.log("props", JSON.stringify(props, null, "\t"));
         this.socket = new SSClient(props, this);
     }
     isOpen() {
         return this.socket.isOpen();
     }
     init(instance) {
-        this.log("Init")
+        // this.log("Init")
         this.ssocketInstance = instance;
         this.socket.open();
     }
@@ -58,7 +58,7 @@ export default class SSession {
         var objSend = {
             component: "usuario",
             type: "identificacion",
-            data: usr,
+            data: {},
             deviceKey: deviceKey,
             estado: "cargando"
         };
@@ -95,7 +95,7 @@ export default class SSession {
         this.ping();
         this.identificado = false;
         this.indentificarse();
-        this.log("onOpen");
+        // this.log("onOpen");
     }
     onClose() {
         this.log("onClose");
@@ -131,7 +131,7 @@ export default class SSession {
             this.mensajeTemp = ""; // reset cola;
             var mensaje = arr[0]; //data
             var key = arr[1]; // SSkey
-            this.log("onMessage", "\n", mensaje);
+            this.log( mensaje);
             try {
                 var obj = JSON.parse(mensaje);
                 this.notifyRedux(obj);
@@ -150,7 +150,7 @@ export default class SSession {
                     case "identificacion":
                         if (obj.estado == "exito") {
                             this.identificado = true;
-                            this.log("identificado con exito");
+                            // this.log("identificado con exito");
                             return;
                         }
                     default: return;
@@ -159,8 +159,12 @@ export default class SSession {
         }
     }
 
+
+    getTitle(color) {
+        return `SSocket:\x1b[${color}m${this.props.name} < ${this.props.host} >\x1b[39m\n`;
+    }
     log(...args) {
-        console.log('SSession::' + this.props.name + ':', ...args)
+        console.log(this.getTitle(34), ...args)
         if (!this.ssocketInstance) return;
 
         var msn = this.props.name + ':';

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { SText, SView, STheme, SScrollView2 } from 'servisofts-component';
-import { defaultConfig } from './default.config';
+import { getDefaultConfig } from '../index';
 import SSession from './SSession/index';
 import { connect } from 'react-redux';
 
@@ -16,8 +16,11 @@ export type SSocketConfigProps = {
     cert: string,
 }
 
-
+// type SocketConfProps = {
+//     config: SSocketConfigProps
+// }
 class SSocket extends Component {
+    static defaultConfig = getDefaultConfig();
     static Observados = {};
 
     static api = {
@@ -31,8 +34,9 @@ class SSocket extends Component {
     }
     static Instance: SSession = null;
     static getSession() {
+        if (!SSocket.defaultConfig) return null;
         if (!SSocket.Instance) {
-            SSocket.Instance = new SSession(defaultConfig);
+            SSocket.Instance = new SSession(SSocket.defaultConfig);
         }
         return SSocket.Instance;
     }
@@ -49,20 +53,23 @@ class SSocket extends Component {
         this.state = {
             log: []
         };
+        // var data = require("../../../index.js");
+        // alert(JSON.stringify(data));
     }
     componentDidMount() {
         this.initApi();
         SSocket.getSession().init(this);
     }
     initApi() {
-        if (defaultConfig.ssl) {
-            SSocket.api.root = `https://${defaultConfig.host}/images/`;
-            SSocket.api.img = `https://${defaultConfig.host}/img/`;
-            SSocket.api.manejador = `https://${defaultConfig.host}/manejador/`;
+        if (!SSocket.defaultConfig) SSocket.defaultConfig = getDefaultConfig();
+        if (SSocket.defaultConfig.ssl) {
+            SSocket.api.root = `https://${SSocket.defaultConfig.host}/images/`;
+            SSocket.api.img = `https://${SSocket.defaultConfig.host}/img/`;
+            SSocket.api.manejador = `https://${SSocket.defaultConfig.host}/manejador/`;
         } else {
-            SSocket.api.root = `http://${defaultConfig.host}:${defaultConfig.port.http}/`;
-            SSocket.api.img = `http://${defaultConfig.host}:${defaultConfig.port.http}/img/`;
-            SSocket.api.manejador = `http://${defaultConfig.host}:${defaultConfig.port.http}/manejador/`;
+            SSocket.api.root = `http://${SSocket.defaultConfig.host}:${SSocket.defaultConfig.port.http}/`;
+            SSocket.api.img = `http://${SSocket.defaultConfig.host}:${SSocket.defaultConfig.port.http}/img/`;
+            SSocket.api.manejador = `http://${SSocket.defaultConfig.host}:${SSocket.defaultConfig.port.http}/manejador/`;
         }
     }
 
@@ -78,7 +85,7 @@ class SSocket extends Component {
     }
     render() {
         this.notifyObserver();
-        // return <></>
+        return <></>
         // if (SSocket.getSession().isOpen()) {
         //     return null;
         // }
