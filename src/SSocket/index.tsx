@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { SText, SView, STheme, SScrollView2 } from 'servisofts-component';
+import { SText, SView, STheme, SScrollView2, SThread, SIcon } from 'servisofts-component';
 import { getDefaultConfig } from '../index';
 import SSession from './SSession/index';
 import { connect } from 'react-redux';
-
+import SHttp from './SHttp';
 export type SSocketConfigProps = {
     name: string,
     host: 'localhost' | string,
@@ -14,12 +14,17 @@ export type SSocketConfigProps = {
     },
     ssl: boolean,// Only for https ans wss connections
     cert: string,
+    apis?: any,
 }
 
 // type SocketConfProps = {
 //     config: SSocketConfigProps
 // }
-class SSocket extends Component {
+var _PROPS = null;
+type SSocketData = {
+    identificarse: (props) => void,
+}
+class SSocket extends Component<SSocketData> {
     static defaultConfig = getDefaultConfig();
     static Observados = {};
 
@@ -27,6 +32,7 @@ class SSocket extends Component {
         root: "",
         manejador: "",
         img: "",
+        rp: "",
     }
 
     static register(observado, callback) {
@@ -40,12 +46,23 @@ class SSocket extends Component {
         }
         return SSocket.Instance;
     }
+    static sendHttp(url, data) {
+        return SHttp.post(url, data, _PROPS);
+    }
     static send(data) {
         //TODO: send data to server
         if (!SSocket.getSession()) {
+            // alert(data.component)
             return;
         }
-        SSocket.getSession().send(data);
+        if (!SSocket.getSession().isOpen()) {
+            new SThread(100, "", true).start(() => {
+                this.send(data);
+            })
+            return;
+        }
+
+        return SSocket.getSession().send(data);
     }
     state;
     constructor(props) {
@@ -53,8 +70,10 @@ class SSocket extends Component {
         this.state = {
             log: []
         };
+        this.initApi();
         // var data = require("../../../index.js");
         // alert(JSON.stringify(data));
+        _PROPS = props;
     }
     componentDidMount() {
         this.initApi();
@@ -71,13 +90,16 @@ class SSocket extends Component {
             SSocket.api.img = `http://${SSocket.defaultConfig.host}:${SSocket.defaultConfig.port.http}/img/`;
             SSocket.api.manejador = `http://${SSocket.defaultConfig.host}:${SSocket.defaultConfig.port.http}/manejador/`;
         }
-    }
-
-    getLogs() {
-        return this.state.log.map((item, index) => {
-            return <SText fontSize={12} >{"\n"}{item}</SText>
+        Object.keys(SSocket.defaultConfig.apis).map((key) => {
+            SSocket.api[key] = SSocket.defaultConfig.apis[key];
         })
     }
+
+    // getLogs() {
+    //     return this.state.log.map((item, index) => {
+    //         return <SText fontSize={12} >{"\n"}{item}</SText>
+    //     })
+    // }
     notifyObserver() {
         Object.keys(SSocket.Observados).forEach((key) => {
             SSocket.Observados[key](this);
@@ -85,26 +107,24 @@ class SSocket extends Component {
     }
     render() {
         this.notifyObserver();
+        _PROPS = this.props;
+        // return <></>
+        if (SSocket.getSession().isOpen()) {
+            return null;
+        }
         return <></>
-        // if (SSocket.getSession().isOpen()) {
-        //     return null;
-        // }
         return (
             <SView style={{
-                width: 400,
-                height: "100%",
+                width: 200,
+                height: 200,
                 position: "absolute",
-                backgroundColor: "#66666699",
-                borderRadius: 10,
+                backgroundColor: STheme.color.background + "aa",
                 overflow: "hidden",
             }} center>
-                <SText fontSize={16} >SSocket</SText>
-                <SScrollView2 disableHorizontal>
-                    <SView flex col={"xs-12"} >
-                        {this.getLogs()}
-                    </SView>
-                </SScrollView2>
-
+                <SView col={"xs-3 md-2 xl-1"}>
+                    <SIcon name={"Wifi"} fill={STheme.color.secondary} />
+                </SView>
+                <SText>Conexion perdida</SText>
             </SView>
         );
     }

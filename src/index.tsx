@@ -1,4 +1,5 @@
-import SSocket, { SSocketConfigProps } from "./SSocket";
+import SSocket from "./SSocket";
+import {SSocketConfigProps} from "./SSocket";
 export type SSocketProps = SSocketConfigProps;
 
 var DefautlConfig = null;

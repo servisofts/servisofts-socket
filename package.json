@@ -1,7 +1,7 @@
 {
     "name": "servisofts-socket",
     "title": "Servisofts socket",
-    "version": "2.0.1",
+    "version": "2.1.0",
     "description": "Socket ss",
     "main": "index.js",
     "types": "index.d.ts",
@@ -23,7 +23,9 @@
         "/src",
         "/lib",
         "/*.podspec",
-        "/jest"
+        "/jest",
+        "/Tcp-Socket",
+        "/SSocket"
     ],
     "keywords": [
         "react-native",

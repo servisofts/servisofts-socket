@@ -18,6 +18,7 @@ export default class SSession {
         this.socket = new SSClient(props, this);
     }
     isOpen() {
+        if(!this.identificado) return false;
         return this.socket.isOpen();
     }
     init(instance) {
@@ -53,6 +54,9 @@ export default class SSession {
     }
 
     indentificarse() {
+        if (!this.ssocketInstance.props) return;
+        if (!this.ssocketInstance.props.identificarse) return;
+        var prIdent = this.ssocketInstance.props.identificarse(this.ssocketInstance.props);
         var usr = false;
         var deviceKey = "deviceKey"
         var objSend = {
@@ -60,6 +64,7 @@ export default class SSession {
             type: "identificacion",
             data: {},
             deviceKey: deviceKey,
+            ...prIdent,
             estado: "cargando"
         };
         this.send(objSend);
@@ -87,9 +92,12 @@ export default class SSession {
         if (!this.socket) {
             return;
         }
+        if (!this.socket.send) return;
+
         this.socket.send(str);
         this.notifyRedux(str);
         this.reintent(str)
+        return true;
     }
     onOpen() {
         this.ping();
@@ -113,6 +121,7 @@ export default class SSession {
             try {
                 obj = JSON.parse(obj);
             } catch (e) {
+                console.log(e);
                 this.log("ERROR", "notifyRedux error al convertir el mensaje a JSON")
                 return;
             }
@@ -121,7 +130,10 @@ export default class SSession {
             this.log("ERROR", "No hay ssocketInstance, No se pudo hacer dispatch del mensaje.")
             return;
         }
+
         this.ssocketInstance.props.dispatch(obj);
+
+        return;
     }
     onMessage(msn) {
         this.mensajeTemp += msn
@@ -131,7 +143,7 @@ export default class SSession {
             this.mensajeTemp = ""; // reset cola;
             var mensaje = arr[0]; //data
             var key = arr[1]; // SSkey
-            this.log( mensaje);
+            this.log(mensaje);
             try {
                 var obj = JSON.parse(mensaje);
                 this.notifyRedux(obj);
@@ -150,6 +162,11 @@ export default class SSession {
                     case "identificacion":
                         if (obj.estado == "exito") {
                             this.identificado = true;
+                            this.notifyRedux({
+                                component: "usuario",
+                                type: "identificacion",
+                                estado: "exito"
+                            });
                             // this.log("identificado con exito");
                             return;
                         }
@@ -165,14 +182,14 @@ export default class SSession {
     }
     log(...args) {
         console.log(this.getTitle(34), ...args)
-        if (!this.ssocketInstance) return;
+        // if (!this.ssocketInstance) return;
 
-        var msn = this.props.name + ':';
-        for (var i = 0; i < arguments.length; i++) {
-            msn += arguments[i];
-        }
-        this.ssocketInstance.state.log.push(msn);
-        this.ssocketInstance.setState({ log: this.ssocketInstance.state.log });
+        // var msn = this.props.name + ':';
+        // for (var i = 0; i < arguments.length; i++) {
+        //     msn += arguments[i];
+        // }
+        // this.ssocketInstance.state.log.push(msn);
+        // this.ssocketInstance.setState({ log: this.ssocketInstance.state.log });
 
     }
 }

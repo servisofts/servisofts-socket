@@ -40,6 +40,7 @@ export default class SSClient {
         if(!this.socket){
             return;
         }
+        if(!this.isOpen)return;
         this.socket.send(data + "\n");
         // store.dispatch(obj);
     }
