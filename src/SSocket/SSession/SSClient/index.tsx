@@ -25,7 +25,7 @@ export default class SSClient {
         }
         this.socket = new WebSocket(this.url);
         this.socket.onopen = () => this.SSession.onOpen();
-        this.socket.onclose = () => this.SSession.onClose();
+        this.socket.onclose = (e) => this.SSession.onClose(e);
         this.socket.onerror = (evt) => this.SSession.onError(evt);
         this.socket.onmessage = (evt) => {
             this.SSession.onMessage(evt.data)

@@ -42,6 +42,23 @@ class SHttp extends Component {
             })
             .catch(error => console.log('error', error));
     }
+    static async postAsync(url, data) {
+        return new Promise((resolve, reject) => {
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+            var requestOptions: any = {
+                method: 'POST',
+                body: JSON.stringify(data),
+                redirect: 'follow',
+            };
+            fetch(url, requestOptions)
+                .then(response => response.text())
+                .then(result => {
+                    resolve(JSON.parse(result));
+                })
+                .catch(error => reject(error));
+        })
+    }
     static post(url, data, props) {
         if (!props) return;
         props.dispatch(data);
@@ -57,7 +74,7 @@ class SHttp extends Component {
         fetch(url, requestOptions)
             .then(response => response.text())
             .then(result => {
-                console.log(result);
+                // console.log(result);
                 props.dispatch(JSON.parse(result));
             })
             .catch(error => console.log('error', error));

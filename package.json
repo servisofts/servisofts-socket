@@ -1,7 +1,7 @@
 {
     "name": "servisofts-socket",
     "title": "Servisofts socket",
-    "version": "2.1.0",
+    "version": "3.0.7",
     "description": "Socket ss",
     "main": "index.js",
     "types": "index.d.ts",
@@ -37,7 +37,6 @@
     },
     "license": "MIT",
     "peerDependencies": {
-        "@babel/core": "^7.8.4",
         "react": "*",
         "react-dom": "*",
         "react-native": "*",

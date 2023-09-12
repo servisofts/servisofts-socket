@@ -2,8 +2,8 @@
 
 
 declare module "servisofts-component" {
-    import { SThread, SText, SView, SView, SScrollView2, STheme, SIcon } from 'servisofts-component';
-    export { SThread, SText, SView, SView, SScrollView2, STheme, SIcon };
+    import { SThread, SText, SView, SScrollView2, STheme, SIcon } from 'servisofts-component';
+    export { SThread, SText, SView, SScrollView2, STheme, SIcon };
 }
 declare module "react-redux" {
     import { connect } from 'react-redux';

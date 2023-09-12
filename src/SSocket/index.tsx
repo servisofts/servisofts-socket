@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { SText, SView, STheme, SScrollView2, SThread, SIcon } from 'servisofts-component';
 import { getDefaultConfig } from '../index';
 import SSession from './SSession/index';
-import { connect } from 'react-redux';
+// import { connect } from 'react-redux';
 import SHttp from './SHttp';
 export type SSocketConfigProps = {
     name: string,
@@ -15,6 +15,8 @@ export type SSocketConfigProps = {
     ssl: boolean,// Only for https ans wss connections
     cert: string,
     apis?: any,
+    timeReconnect?: number,
+    timeReintent?: number,
 }
 
 // type SocketConfProps = {
@@ -22,12 +24,13 @@ export type SSocketConfigProps = {
 // }
 var _PROPS = null;
 type SSocketData = {
+    store?: any,
     identificarse: (props) => void,
 }
 class SSocket extends Component<SSocketData> {
     static defaultConfig = getDefaultConfig();
     static Observados = {};
-
+    static SocketInstace = null;
     static api = {
         root: "",
         manejador: "",
@@ -46,10 +49,31 @@ class SSocket extends Component<SSocketData> {
         }
         return SSocket.Instance;
     }
+    static identificarse() {
+        return new Promise((resolve, reject) => {
+            let session = this.getSession();
+            if (!session) {
+                reject("Session is undefined");
+                return;
+            }
+            session.identificarse();
+            resolve("succes");
+        });
+    }
+
+    static sendPromise(data: any, timeout = 15000) {
+        return new Promise((resolve, reject) => {
+            SSocket.getSession().sendPromise(resolve, reject, data, timeout);
+        });
+    }
+
     static sendHttp(url, data) {
         return SHttp.post(url, data, _PROPS);
     }
-    static send(data) {
+    static async sendHttpAsync(url, data) {
+        return SHttp.postAsync(url, data);
+    }
+    static async send(data) {
         //TODO: send data to server
         if (!SSocket.getSession()) {
             // alert(data.component)
@@ -62,7 +86,7 @@ class SSocket extends Component<SSocketData> {
             return;
         }
 
-        return SSocket.getSession().send(data);
+        SSocket.getSession().send(data);
     }
     state;
     constructor(props) {
@@ -70,16 +94,30 @@ class SSocket extends Component<SSocketData> {
         this.state = {
             log: []
         };
-        this.initApi();
+        SSocket.SocketInstace = this;
+        SSocket.initApi();
         // var data = require("../../../index.js");
         // alert(JSON.stringify(data));
-        _PROPS = props;
+        _PROPS = {
+            dispatch: props.store.dispatch
+        };
+    }
+    getState() {
+        if (!this.props.store) return;
+        if (!this.props.store.getState) return;
+        return this.props.store.getState();
+    }
+    dispatch(dat) {
+        if (!this.props.store) return;
+        if (!this.props.store.dispatch) return;
+        this.props.store.dispatch(dat);
     }
     componentDidMount() {
-        this.initApi();
+        SSocket.initApi();
+
         SSocket.getSession().init(this);
     }
-    initApi() {
+    static initApi() {
         if (!SSocket.defaultConfig) SSocket.defaultConfig = getDefaultConfig();
         if (SSocket.defaultConfig.ssl) {
             SSocket.api.root = `https://${SSocket.defaultConfig.host}/images/`;
@@ -107,7 +145,6 @@ class SSocket extends Component<SSocketData> {
     }
     render() {
         this.notifyObserver();
-        _PROPS = this.props;
         // return <></>
         if (SSocket.getSession().isOpen()) {
             return null;
@@ -129,7 +166,8 @@ class SSocket extends Component<SSocketData> {
         );
     }
 }
-const initStates = (state) => {
-    return { state }
-};
-export default connect(initStates)(SSocket);
+// const initStates = (state) => {
+// return { state }
+// };
+// export default connect(initStates)(SSocket);
+export default SSocket;
