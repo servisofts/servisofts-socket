@@ -66,6 +66,11 @@ class SSocket extends Component<SSocketData> {
             SSocket.getSession().sendPromise(resolve, reject, data, timeout);
         });
     }
+    static sendPromise2(data: any, timeout = 15000) {
+        return new Promise((resolve, reject) => {
+            SSocket.getSession().sendPromise2(resolve, reject, data, timeout);
+        });
+    }
 
     static sendHttp(url, data) {
         return SHttp.post(url, data, _PROPS);

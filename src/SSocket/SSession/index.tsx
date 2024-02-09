@@ -177,6 +177,33 @@ export default class SSession {
         })
     }
 
+    async sendPromise2(resolve, reject, obj, timeout, cant = 1, key = this.generateUUID()) {
+        obj["_ssocket_promise"] = key;
+        if (!this.iniciado) {
+            obj.estado = "error";
+            obj.error = "noIniciado";
+            reject(obj);
+            return;
+        }
+        this.pendinPromises[obj["_ssocket_promise"]] = {
+            resolve: resolve,
+            reject: reject
+        };
+        this.send(obj, true);
+
+        new SThread(timeout, "hilo_reintent_promise" + obj["_ssocket_promise"], true).start(() => {
+            if (obj["_ssocket_promise"]) {
+                if (this.pendinPromises[obj["_ssocket_promise"]]) {
+                    obj.estado = "error";
+                    obj.error = "timeOut";
+                    this.pendinPromises[obj["_ssocket_promise"]].reject(obj);
+                    delete this.pendinPromises[obj["_ssocket_promise"]];
+                }
+                return;
+            }
+        })
+    }
+
 
     onOpen() {
         this.ping();
