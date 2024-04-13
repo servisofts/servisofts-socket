@@ -13,7 +13,7 @@ export default class SSession {
     identificado;
     iniciado;
     pendinPromises: any = {};
-
+    
     constructor(props: SSocketConfigProps) {
         this.props = props;
         DEBUG = this.props.debug;
