@@ -38,6 +38,29 @@ class SSocket extends Component<SSocketData> {
         rp: "",
     }
 
+    static onMessagesInstances = [];
+
+    static addEventListener(type: "onMessage", callback: any) {
+        if (type === "onMessage") {
+            this.onMessagesInstances.push(callback);
+        } else {
+            console.error("Unsupported event type");
+        }
+    }
+
+    static removeEventListener(type: "onMessage", callback: any) {
+        if (type === "onMessage") {
+            this.onMessagesInstances = this.onMessagesInstances.filter(cb => cb !== callback);
+        } else {
+            console.error("Unsupported event type");
+        }
+    }
+
+    // Método para disparar eventos, por ejemplo:
+    static triggerOnMessage(event: any) {
+        this.onMessagesInstances.forEach(callback => callback(event));
+    }
+    
     static register(observado, callback) {
         SSocket.Observados[observado] = callback;
     }

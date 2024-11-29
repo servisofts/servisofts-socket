@@ -1,7 +1,7 @@
 {
     "name": "servisofts-socket",
     "title": "Servisofts socket",
-    "version": "4.0.4",
+    "version": "4.0.5",
     "description": "Socket ss",
     "main": "index.js",
     "types": "index.d.ts",

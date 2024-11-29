@@ -13,7 +13,7 @@ export default class SSession {
     identificado;
     iniciado;
     pendinPromises: any = {};
-    
+
     constructor(props: SSocketConfigProps) {
         this.props = props;
         DEBUG = this.props.debug;
@@ -258,8 +258,8 @@ export default class SSession {
             try {
                 var obj = JSON.parse(mensaje);
                 this.log("[IN]", obj?.component, obj?.type, obj?.estado, obj);
+                SSocket.triggerOnMessage(obj);
                 if (obj["_ssocket_promise"]) {
-                    console.log("Entro al socket promise");
                     if (this.pendinPromises[obj["_ssocket_promise"]]) {
                         if (obj.estado == "error") {
                             this.pendinPromises[obj["_ssocket_promise"]].reject(obj);
@@ -273,6 +273,7 @@ export default class SSession {
                 }
                 this.notifyRedux(obj);
                 this.manejadorInterno(obj);
+                SSocket.triggerOnMessage(obj);
             } catch (e) {
                 this.log("onMessage Error", e);
             }
