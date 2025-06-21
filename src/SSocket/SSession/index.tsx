@@ -1,5 +1,5 @@
 import SSocket, { SSocketConfigProps } from "..";
-import { SThread } from 'servisofts-component';
+import SThread from '../../SThread';
 import SSClient from './SSClient/index';
 
 var DEBUG = false;

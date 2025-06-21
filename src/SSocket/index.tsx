@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { SText, SView, STheme, SScrollView2, SThread, SIcon } from 'servisofts-component';
+import SThread from '../SThread';
 import { getDefaultConfig } from '../index';
 import SSession from './SSession/index';
 // import { connect } from 'react-redux';
@@ -177,20 +177,7 @@ class SSocket extends Component<SSocketData> {
             return null;
         }
         return <></>
-        return (
-            <SView style={{
-                width: 200,
-                height: 200,
-                position: "absolute",
-                backgroundColor: STheme.color.background + "aa",
-                overflow: "hidden",
-            }} center>
-                <SView col={"xs-3 md-2 xl-1"}>
-                    <SIcon name={"Wifi"} fill={STheme.color.secondary} />
-                </SView>
-                <SText>Conexion perdida</SText>
-            </SView>
-        );
+        
     }
 }
 // const initStates = (state) => {

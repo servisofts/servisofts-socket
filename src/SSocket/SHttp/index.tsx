@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { SThread } from 'servisofts-component';
-import { connect } from 'react-redux';
+import SThread from '../../SThread';
 // const URL = "http://192.168.0.3:8080/"
 var INSTANCE = null;
-class SHttp extends Component {
+export default class SHttp extends Component {
     static reintent(obj, props) {
         if (typeof obj != 'object') {
             try {
@@ -100,7 +99,7 @@ class SHttp extends Component {
     }
 }
 
-const initStates = (state) => {
-    return { state }
-};
-export default connect(initStates)(SHttp);
+// const initStates = (state) => {
+//     return { state }
+// };
+// export default connect(initStates)(SHttp);

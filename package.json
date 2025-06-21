@@ -1,7 +1,7 @@
 {
     "name": "servisofts-socket",
     "title": "Servisofts socket",
-    "version": "4.0.8",
+    "version": "5.0.1",
     "description": "Socket ss",
     "main": "index.js",
     "types": "index.d.ts",
@@ -30,10 +30,7 @@
     "peerDependencies": {
         "react": "*",
         "react-dom": "*",
-        "react-native": "*",
-        "react-native-web": "*",
-        "react-redux": "*",
-        "servisofts-component": "*"
+        "react-native": "*"
     },
     "devDependencies": {
         "@semantic-release/changelog": "^5.0.0",
