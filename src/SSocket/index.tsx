@@ -127,7 +127,7 @@ class SSocket extends Component<SSocketData> {
         // var data = require("../../../index.js");
         // alert(JSON.stringify(data));
         _PROPS = {
-            dispatch: props.store.dispatch
+            dispatch: props?.store?.dispatch
         };
     }
     getState() {
@@ -142,7 +142,6 @@ class SSocket extends Component<SSocketData> {
     }
     componentDidMount() {
         SSocket.initApi();
-
         SSocket.getSession().init(this);
     }
     static initApi() {

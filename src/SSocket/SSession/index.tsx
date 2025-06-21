@@ -273,7 +273,6 @@ export default class SSession {
                 }
                 this.notifyRedux(obj);
                 this.manejadorInterno(obj);
-                SSocket.triggerOnMessage(obj);
             } catch (e) {
                 this.log("onMessage Error", e);
             }
